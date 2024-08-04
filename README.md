@@ -1,10 +1,15 @@
 # VideoCap_ClipExtract
 
-## To run the API
+## Run the project
 
-uvicorn api:app --reload
+Step # 01
+  open cmd in projects's folder
 
-it will open the fastapi's swagger with default address http://127.0.0.1:8000
+Step # 02 (hit this command in cmd)
+  uvicorn api:app --reload
+  
+Step # 02
+  it will open the fastapi's swagger with default address http://127.0.0.1:8000
 
 ## Data extracted from video
 
