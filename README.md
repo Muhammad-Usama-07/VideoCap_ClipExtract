@@ -3,7 +3,7 @@
 ## Run the project
 
 Step # 01
-  open cmd in projects's folder
+  clone the repo, open cmd in projects's folder
 
 Step # 02 (hit this command in cmd)
   uvicorn api:app --reload
