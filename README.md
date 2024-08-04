@@ -30,6 +30,9 @@ Step # 02
 
 ![image](https://github.com/user-attachments/assets/8fc597c5-09c3-48ea-b419-54880c178a8d)
 
+## Project's Requirements
 
+  OS: windows 10
+  python version: 3.11.5
 
 
