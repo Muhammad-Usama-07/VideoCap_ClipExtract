@@ -16,5 +16,6 @@ Step # 02
 
 ### Data extracted from video
 
-![image](https://github.com/user-attachments/assets/e20a721f-3ddc-4dc6-9991-0e692414efe3)
+![image](https://github.com/user-attachments/assets/d08c4c9e-5e9a-41de-b831-e08f3c475972)
+
 
