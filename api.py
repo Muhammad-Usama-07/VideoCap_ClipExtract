@@ -4,6 +4,8 @@ import os
 import cv2
 from transformers import pipeline
 import pandas as pd
+from fuzzywuzzy import fuzz
+from moviepy.video.io.VideoFileClip import VideoFileClip
 
 app = FastAPI()
 
@@ -40,7 +42,8 @@ async def video(file: UploadFile = File(...)):
     out = cv2.VideoWriter(output_file_path, fourcc, frame_rate, (frame_width, frame_height))
     
     frame_number = 0
-    data = {'caption': [], 'timestamp': []}
+    cap_number = 0
+    data = {'cap_number':[],'caption': [], 'timestamp': []}
 
     prev_minutes, prev_seconds, prev_milliseconds = 0, 0, 0
     # Process each frame
@@ -68,7 +71,8 @@ async def video(file: UploadFile = File(...)):
                 
                 cap = image_to_text(f"processed_videos/frame_{frame_number + 1}.jpg")[0]['generated_text']
                 print(f"***** Caption {cap}\n")
-                
+                cap_number+=1
+                data['cap_number'].append('cap_'+ str(cap_number))
                 data['caption'].append(cap)
                 data['timestamp'].append(time_range)
 
@@ -85,7 +89,7 @@ async def video(file: UploadFile = File(...)):
             print(f"\n*****Frame number {frame_number} timestamp {time_range}")
             cap = image_to_text(f"processed_videos/frame_{frame_number}.jpg")[0]['generated_text']
             print(f"*****Caption {cap}\n")
-            
+            data['cap_number'].append('cap_'+ str(cap_number))
             data['caption'].append(cap)
             data['timestamp'].append(time_range)
             
@@ -101,6 +105,7 @@ async def video(file: UploadFile = File(...)):
 
     # Create a DataFrame
     df = pd.DataFrame({
+        "cap_number": data["cap_number"],
         "caption": data["caption"],
         "timestamp": formatted_timestamps
     })
@@ -117,7 +122,53 @@ async def video(file: UploadFile = File(...)):
     }
 @app.post("/user_input/")
 async def text(text: str):
-    return {"text": text}
+    input_text = text
+    df = pd.read_csv('output.csv') 
+    # Load the video
+    video_path = 'uploaded_videos/video_file.mp4'  # Replace with your video file path
+    video = VideoFileClip(video_path)
+
+    matching_clips = []
+    matching_captions = []
+    matching_timestamps = []
+    clip_output_path = []
+
+    for index, row in df.iterrows():
+        caption = row['caption']
+        similarity_score = fuzz.token_set_ratio(input_text, caption)
+        print('similarity_score', similarity_score)
+        
+        if similarity_score >= 85:  # Or any threshold you consider perfect
+            
+            start_time, end_time = row['timestamp'].split(' - ')
+            start_seconds = timestamp_to_seconds(start_time)
+            end_seconds = timestamp_to_seconds(end_time)
+
+            # Slice the video
+            clip = video.subclip(start_seconds, end_seconds)
+
+            # Save the clip
+            output_path = f"uploaded_videos/{clip_num}.mp4"
+            clip.write_videofile(output_path, codec='libx264')
+
+            # saving all items in the list
+            matching_clips.append(row['cap_number'])
+            matching_captions.append(caption)
+            matching_timestamps.append(row['timestamp'])
+            clip_output_path.append(output_path)
+
+    if matching_captions:
+        return {
+            "data": {
+                "clip_num":matching_clips,
+                "caption": matching_captions,
+                "timestamp": matching_timestamps,
+                'clip_path': clip_output_path
+            }
+        }
+    else:
+        return {"data": {"caption": [], "timestamp": []}}
+    # return {"text": text}
 
 if __name__ == "__main__":
     import uvicorn
