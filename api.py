@@ -61,6 +61,7 @@ async def video(file: UploadFile = File(...)):
             if frame_number == 0:
                 print(f"Frame number {frame_number + 1} timestamp {time_stamp}")
             else:
+                cv2.imwrite(f'processed_videos/frame_{frame_number + 1}.jpg', frame)
                 previous_timestamp = f"{prev_minutes:02}:{prev_seconds:02}:{prev_milliseconds:03}"
                 time_range = [previous_timestamp, time_stamp]
                 print(f"\n***** Frame number {frame_number + 1} timestamp {time_range}")
@@ -72,12 +73,13 @@ async def video(file: UploadFile = File(...)):
                 data['timestamp'].append(time_range)
 
             prev_minutes, prev_seconds, prev_milliseconds = minutes, seconds, milliseconds
-            cv2.imwrite(f'processed_videos/frame_{frame_number + 1}.jpg', frame)
+            
             
         out.write(frame)
         frame_number += 1
 
         if frame_number == frame_count:
+            cv2.imwrite(f'processed_videos/frame_{frame_number}.jpg', frame)
             previous_timestamp = f"{prev_minutes:02}:{prev_seconds:02}:{prev_milliseconds:03}" 
             time_range = [previous_timestamp, time_stamp]
             print(f"\n*****Frame number {frame_number} timestamp {time_range}")
@@ -86,7 +88,7 @@ async def video(file: UploadFile = File(...)):
             
             data['caption'].append(cap)
             data['timestamp'].append(time_range)
-            cv2.imwrite(f'processed_videos/frame_{frame_number}.jpg', frame)
+            
 
     video_capture.release()
     out.release()
