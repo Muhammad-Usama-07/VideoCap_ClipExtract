@@ -111,10 +111,6 @@ async def video(file: UploadFile = File(...)):
 
 
     return {
-        "filename": file.filename,
-        "output_file": "processed_" + file.filename,
-        "total_frames": frame_count,
-        "processed_frames": frame_number,
         "data": data
     }
 @app.post("/user_input/")
