@@ -5,7 +5,8 @@
 Step # 01
   clone the repo, open cmd in projects's folder
 
-Step # 02 (hit this command in cmd)
+Step # 02 (hit these command in cmd)
+  pip install -r requirements.txt
   uvicorn api:app --reload
   
 Step # 02
