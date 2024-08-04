@@ -18,4 +18,17 @@ Step # 02
 
 ![image](https://github.com/user-attachments/assets/d08c4c9e-5e9a-41de-b831-e08f3c475972)
 
+## Task 02
+  In task 02, made and endpoint i fastapi called "user_input", which take a sentence/text as input from the user, after that, it will match the user's query with the saved captions from csv file and than slice the video paths according to the timestamp of the captions and will return the detailed respose.
+  
+### Reponse of the endpoint
+
+![image](https://github.com/user-attachments/assets/cac9f7d2-9c1e-4f0c-8aa4-6359322a8b83)
+
+### Output after user's query
+
+![image](https://github.com/user-attachments/assets/8fc597c5-09c3-48ea-b419-54880c178a8d)
+
+
+
 
